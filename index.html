@@ -1,0 +1,135 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><title>TEADEPROD</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}body{background:#000;color:#fff;font-family:-apple-system,BlinkMacSystemFont,sans-serif}
+.screen{display:none;min-height:100vh}.active{display:flex;flex-direction:column}
+.top{padding:14px;display:flex;justify-content:space-between;align-items:center;background:#0a0a0a;border-bottom:1px solid #1a1a1a;position:sticky;top:0;z-index:10}
+.priceRow{display:flex;gap:10px}.priceBox{flex:1;background:#1a1a1e;border:1px solid #2a2a2e;border-radius:12px;padding:14px;text-align:center;font-weight:700;font-size:16px}
+.small{font-size:12px;color:#888;margin:14px 0 6px 4px;display:flex;justify-content:space-between}
+.card{background:#141416;border-radius:16px;padding:12px;margin:10px 16px;border:1px solid #1e1e22}
+.gridCtrl{display:flex;align-items:center;justify-content:space-between;background:#1a1a1e;border-radius:12px;padding:10px 14px}
+.gridBtn{width:36px;height:36px;border-radius:10px;background:#25252a;border:none;color:#fff;font-size:20px}
+.investInput{background:#1a1a1e;border-radius:12px;padding:12px;display:flex;justify-content:space-between;align-items:center;margin:8px 0}
+.btn{width:calc(100% - 32px);margin:16px;background:#f7c548;color:#000;border:none;border-radius:16px;padding:18px;font-weight:900;font-size:16px}
+.btn:disabled{opacity:.4}
+.signal{background:#002a14;border:2px solid #00ff88;border-radius:16px;padding:14px;margin:12px 16px;text-align:center;display:none}
+.tabs{position:fixed;bottom:0;left:0;right:0;background:#0a0a0a;border-top:1px solid #1a1a1a;display:flex;justify-content:space-around;padding:8px 0}
+.tabs div{font-size:11px;color:#666;text-align:center;padding:6px}.tabs .on{color:#f7c548}
+.dot{width:8px;height:8px;background:#00ff88;border-radius:50%;display:inline-block;animation:blink 1s infinite}@keyframes blink{50%{opacity:.3}}
+</style></head><body>
+
+<div id="s1" class="screen active" style="justify-content:center;align-items:center;padding:20px;text-align:center">
+<h1 style="font-size:32px">TEADEPROD</h1><h2 style="color:#f7c548;margin:20px 0">Commence à gagner<br>l'argent plus facile</h2>
+<div style="width:100%;max-width:340px"><button onclick="go(2)" style="width:100%;padding:18px;border-radius:16px;background:#f7c548;border:none;font-weight:900">COMMENCER →</button></div>
+</div>
+
+<div id="s2" class="screen" style="justify-content:center;padding:20px">
+<h3 style="text-align:center">🔑 Configuration</h3><div style="background:#141416;border-radius:16px;padding:16px;margin-top:14px">
+<input id="k" placeholder="API KEY Bybit" style="width:100%;padding:14px;background:#0a0a0a;border:1px solid #222;color:#fff;border-radius:10px;margin:6px 0">
+<input id="s" type="password" placeholder="SECRET" style="width:100%;padding:14px;background:#0a0a0a;border:1px solid #222;color:#fff;border-radius:10px;margin:6px 0">
+<select id="inter" style="width:100%;padding:14px;background:#0a0a0a;border:1px solid #222;color:#fff;border-radius:10px"><option value="5">Grids Prix / 5s MIN</option><option value="3">3s</option><option value="1">1s</option></select>
+<button onclick="saveKey()" style="width:100%;padding:16px;background:#f7c548;border:none;border-radius:12px;font-weight:900;margin-top:10px">CONTINUE →</button>
+</div></div>
+
+<div id="s3" class="screen">
+<div class="top"><span onclick="go(1)">←</span><b>TEADEPROD • Spot Grid Bot</b><span>🤖</span></div>
+
+<div style="padding:0 16px;display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+<div><div style="display:flex;align-items:center;gap:6px"><span>🟡</span><b>DOGE/USDT</b> <small>▼</small></div><div style="font-size:11px;color:#888">AI Strategy | <b style="color:#fff">Manual</b></div></div>
+<div style="text-align:right"><div style="color:#ff3b30;font-weight:700" id="livePrice">0.09465</div><div style="font-size:10px;color:#888"><span class="dot"></span> LIVE <span id="liveSec">5s</span></div></div>
+</div>
+
+<div class="small"><span>Price Range</span><span style="color:#888">✎ Smart Fill</span></div>
+<div class="priceRow" style="padding:0 16px">
+<div class="priceBox"><input id="buyP" value="0.07831" style="background:transparent;border:none;color:#fff;width:80px;font-weight:700"> <small style="color:#888">USDT</small></div>
+<div style="display:flex;align-items:center;color:#444">—</div>
+<div class="priceBox"><input id="sellP" value="0.11083" style="background:transparent;border:none;color:#fff;width:80px;font-weight:700"> <small style="color:#888">USDT</small></div>
+</div>
+
+<div class="small"><span>Grids</span></div>
+<div class="card"><div class="gridCtrl"><input id="gridNum" value="21" style="background:transparent;border:none;color:#fff;font-size:18px;width:40px"><div><button class="gridBtn" onclick="chgGrid(-1)">−</button> <button class="gridBtn" onclick="chgGrid(1)">+</button></div></div>
+<div style="display:flex;justify-content:space-between;margin-top:10px;font-size:12px;color:#666"><span>Interval</span><span style="color:#fff" id="intervalShow">0.00154 USDT</span></div>
+<div style="display:flex;justify-content:space-between;margin-top:6px;font-size:12px;color:#666"><span>Profit/Grid</span><span style="color:#4cd964" id="profitGrid">1.41% - 1.96%</span></div>
+</div>
+
+<div id="signalBox" class="signal">
+<div style="font-size:14px">🔔 <b style="color:#ff3b30">-1% DROP DETECTÉ!</b></div>
+<button onclick="doBuy()" style="width:100%;margin-top:10px;padding:14px;background:#00ff88;color:#000;border:none;border-radius:12px;font-weight:900">🟢 BUYPROD CLIQUABLE - ACHETER @ <span id="dropPrice">--</span></button>
+<div style="font-size:10px;color:#aaa;margin-top:6px">Raha tsy cliquez dia TSY mividy robot</div>
+</div>
+
+<div class="small"><span>Investment</span><span style="color:#4cd964">● USDT ▼</span></div>
+<div class="card">
+<div class="investInput"><span style="color:#666">Min. 25.50582</span><span><small>USDT</small></span></div>
+<div class="investInput"><span style="color:#666">Max</span><span style="display:flex;gap:6px;align-items:center"><input id="depotMontant" type="number" placeholder="USDT" style="width:80px;background:transparent;border:none;color:#fff;text-align:right"><span onclick="maxFond()" style="background:#333;padding:6px 10px;border-radius:8px;color:#f7c548;font-size:12px">Max USDT</span></span></div>
+<div style="display:flex;justify-content:space-between;font-size:11px;color:#666;margin-top:8px"><span>Available (Funding)</span><span style="color:#fff" id="avail">0.00000916 USDT ⊕</span></div>
+<div style="margin-top:10px;display:flex;justify-content:space-between;font-size:12px"><span>FOND</span><b id="fondTxt">100$</b> | <span>PROFIT VOATOKANA</span><b id="profitTxt" style="color:#4cd964">0$</b></div>
+<div style="font-size:11px;color:#888;margin-top:6px">Position: <span id="posTxt">Aucune</span></div>
+</div>
+
+<div class="small"><span>Advanced Settings (Optional)</span><span>︿</span></div>
+<div class="card" style="padding:0">
+<div style="padding:12px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #1a1a1a"><input type="checkbox" id="trail"> <span>Trailing Stop</span></div>
+<div style="padding:12px;display:flex;align-items:center;gap:10px"><input type="checkbox" id="entry"> <span>Entry Price</span></div>
+</div>
+
+<div id="robotStatus" style="text-align:center;font-size:12px;color:#666;padding:8px">🔴 Robot OFF - Tsindrio Create Now</div>
+<button class="btn" id="createBtn" onclick="createRobot()">Create Now</button>
+<div style="height:70px"></div>
+</div>
+
+<div class="tabs"><div class="on" onclick="openTab('bot')">🤖<br>Bot</div><div onclick="alert('Mon Solde: '+(FOND+PROFIT).toFixed(2)+'$')">💰<br>Mon Solde</div><div onclick="openTab('hist')">📜<br>Historique</div><div onclick="go(2)">⚙️<br>Clés</div></div>
+
+<div id="histBox" style="display:none;position:fixed;inset:0;background:#000;z-index:30;padding:16px;overflow:auto"><h3>📜 Historique <span onclick="closeHist()" style="float:right">✕</span></h3><div id="hist" style="margin-top:12px;font-size:12px"></div><button onclick="closeHist()" style="width:100%;padding:14px;background:#222;color:#fff;border:none;border-radius:12px;margin-top:12px">Fermer</button></div>
+
+<audio id="alarm" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
+<script>
+let FOND=parseFloat(localStorage.getItem('fond')||'100'),PROFIT=parseFloat(localStorage.getItem('profit')||'0'),pos=JSON.parse(localStorage.getItem('pos')||'null'),hist=JSON.parse(localStorage.getItem('hist')||'[]'),lastP=0.09465,highP=0.09465,timer=null,robotOn=false,signalOn=false;
+function go(n){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('s'+n).classList.add('active');if(n==3)start();}
+function saveKey(){if(!k.value){alert('KEY?');return}localStorage.setItem('bybit_key',k.value);localStorage.setItem('bybit_secret',s.value);localStorage.setItem('inter',inter.value);go(3)}
+function chgGrid(d){let v=parseInt(gridNum.value||'21')+d;if(v<1)v=1;if(v>100)v=100;gridNum.value=v;calcInterval();}
+function calcInterval(){let low=parseFloat(buyP.value)||0.07831,high=parseFloat(sellP.value)||0.11083,grids=parseInt(gridNum.value)||21;let interval=(high-low)/grids;document.getElementById('intervalShow').innerText=interval.toFixed(5)+' USDT';let prof=(interval/low*100).toFixed(2);document.getElementById('profitGrid').innerText=(prof*0.8).toFixed(2)+'% - '+(prof*1.2).toFixed(2)+'%';}
+function openTab(t){if(t=='hist'){histBox.style.display='block'}if(t=='bot'){histBox.style.display='none'}}
+function closeHist(){histBox.style.display='none'}
+function maxFond(){depotMontant.value=FOND.toFixed(2)}
+function createRobot(){
+let low=parseFloat(buyP.value),high=parseFloat(sellP.value);if(!low||!high){alert('Fenoy Price Range');return}
+if(FOND<1){let m=parseFloat(depotMontant.value);if(m){FOND+=m;depotMontant.value=''}else{alert('Ampidiro vola @Investment');return}}
+robotOn=true;highP=lastP;localStorage.setItem('robot','on');localStorage.setItem('buyP',low);localStorage.setItem('sellP',high);
+robotStatus.innerHTML='🟢 ROBOT VELONA - Grids '+gridNum.value+' - Miandry -1% drop';robotStatus.style.color='#00ff88';
+createBtn.innerText='✅ ROBOT ACTIF - EN COURS';createBtn.style.background='#00ff88';try{alarm.play();navigator.vibrate(200)}catch(e){}
+}
+async function getP(){try{let r=await fetch('https://api.bybit.com/v5/market/tickers?category=spot&symbol=DOGEUSDT');let j=await r.json();return parseFloat(j.result.list[0].lastPrice)}catch{return lastP}}
+async function loop(){
+let p=await getP();if(!p)return;lastP=p;livePrice.innerText=p.toFixed(5);
+if(p>highP) highP=p;
+let drop=((p-highP)/highP*100);
+if(robotOn&&!pos&&!signalOn&&drop<=-1){
+signalOn=true;signalBox.style.display='block';dropPrice.innerText=p.toFixed(5);
+try{alarm.play();navigator.vibrate([300,100,300]);}catch(e){}
+signalBox.scrollIntoView({behavior:'smooth'});
+}
+if(robotOn&&pos){
+let high=parseFloat(sellP.value);if(p>=high){doSell();}
+}
+fondTxt.innerText=FOND.toFixed(2)+'$';profitTxt.innerText=PROFIT.toFixed(2)+'$';avail.innerText=(FOND+PROFIT).toFixed(8)+' USDT';
+posTxt.innerText=pos?`${pos.qty.toFixed(1)} DOGE @${pos.buyP.toFixed(5)}`:'Aucune';
+}
+function start(){
+let sec=parseInt(localStorage.getItem('inter')||'5');liveSec.innerText=sec+'s';if(timer)clearInterval(timer);timer=setInterval(loop,sec*1000);loop();calcInterval();
+buyP.addEventListener('input',calcInterval);sellP.addEventListener('input',calcInterval);
+if(localStorage.getItem('robot')=='on'){robotOn=true;highP=lastP;robotStatus.innerHTML='🟢 ROBOT VELONA';robotStatus.style.color='#00ff88';createBtn.innerText='✅ ROBOT ACTIF';createBtn.style.background='#00ff88';}
+upd();
+}
+function upd(){
+histEl=document.getElementById('hist');histEl.innerHTML=hist.slice(-30).reverse().map(h=>`<div style="display:flex;justify-content:space-between;padding:8px;border-bottom:1px solid #111"><span>${h.t} ${h.a}</span><span>${h.p}</span><span style="color:${h.pr.includes('+')?'#4cd964':'#ff3b30'}">${h.pr}</span></div>`).join('');
+localStorage.setItem('fond',FOND);localStorage.setItem('profit',PROFIT);localStorage.setItem('pos',JSON.stringify(pos));localStorage.setItem('hist',JSON.stringify(hist));
+}
+function doBuy(){
+if(!robotOn){createRobot();return}
+if(pos)return;if(FOND<1)return;
+let p=lastP;let q=FOND/p;pos={qty:q,buyP:p,dep:FOND};FOND=0;hist.push({t:new Date().toLocaleTimeString(),a:'BUYPROD',p:p.toFixed(5),pr:'-'+pos.dep.toFixed(2)+'$'});signalBox.style.display='none';signalOn=false;highP=p;upd();
+}
+function doSell(){if(!pos)return;let p=lastP;let tot=pos.qty*p;let pr=tot-pos.dep;FOND=tot;if(pr>0)PROFIT+=pr;hist.push({t:new Date().toLocaleTimeString(),a:'SELL',p:p.toFixed(5),pr:(pr>=0?'+':'')+pr.toFixed(2)+'$'});pos=null;highP=p;upd();alert('PROFIT VOATOKANA '+(pr>=0?'+':'')+pr.toFixed(2)+'$');createBtn.innerText='Create Now';createBtn.style.background='#f7c548';robotStatus.innerHTML='🟢 Fini - Tsindrio Create Now indray';robotOn=false;}
+k.value=localStorage.getItem('bybit_key')||'';s.value=localStorage.getItem('bybit_secret')||'';buyP.value=localStorage.getItem('buyP')||'0.07831';sellP.value=localStorage.getItem('sellP')||'0.11083';
+if(k.value) go(3); else go(1);
+</script></body></html>
