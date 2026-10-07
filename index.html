@@ -32,7 +32,7 @@ table{width:100%;font-size:9px;border-collapse:collapse}th,td{padding:5px;border
 <body>
 <div id="welcome" class="welcome">
 <h1>TEAD <span style="color:#00ff88">V11 CURRENCY</span></h1>
-<p style="margin:10px 0 20px;color:#9bb0a0">ON/OFF + RSI + BOUGIE + CHOIX USD/BNB/DOGE/BTC/ETH par R</p>
+<p style="margin:10px 0 20px;color:#9bb0a0">ON/OFF + RSI + BOUGIE + CHOIX USD/BNB/DOGE/BTC/ETH</p>
 <button class="btn-main" onclick="startApp()">COMMENCER V11 →</button>
 </div>
 <div id="app" class="app">
@@ -66,7 +66,7 @@ document.getElementById('p'+i).innerHTML=`
 <div id="chart${i}" class="chartBox"></div>
 <div class="rsiBox"><div class="rsi mid" id="rsi${i}">RSI:--</div><div class="rsi mid" id="trend${i}">--</div><div class="rsi mid" id="sigRsi${i}">--</div></div>
 <div class="card">
-<label>💵 Vola ampiasaina R${i} - clique safidy:</label>
+<label>💵 Vola R${i} - clique safidy:</label>
 <div class="currSel" id="currSel${i}">
 <div class="curr ${b.fCurr=='USD'?'active':''}" onclick="setCurr(${i},'USD')">💵 USD</div>
 <div class="curr ${b.fCurr=='DOGE'?'active':''}" onclick="setCurr(${i},'DOGE')">🐶 DOGE</div>
@@ -110,4 +110,4 @@ function renderHist(){let h='';HIST.forEach(r=>{h+=`<tr><td>${r.time}</td><td>${
 function clearH(){if(confirm('Effacer?')){HIST=[];localStorage.removeItem('TEAD_HIST');renderHist()}}
 </script>
 </body>
-                        </html>
+  </html>
