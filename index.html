@@ -1,148 +1,149 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AUTO BOT V2</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEAD PROD</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box} body{margin:0;font-family:Inter,Arial;background:#0a0e13;color:#fff}
-.header{padding:16px;text-align:center;background:#111a22;border-bottom:2px solid #00e676}
-.nav{display:flex;gap:8px;padding:10px;background:#141c26;position:sticky;top:0;z-index:10}
-.nav button{flex:1;padding:12px;border:none;border-radius:10px;background:#253141;color:#fff;font-weight:600}
-.nav button.active{background:#00e676;color:#000}
-.page{display:none;padding:14px} .page.active{display:block}
-.card{background:#162130;border-radius:14px;padding:14px;margin-bottom:12px;border:1px solid #253141}
-.input{width:100%;padding:12px;border-radius:10px;border:1px solid #2a3a4d;background:#0f1923;color:#fff;margin:6px 0}
-.btn{width:100%;padding:14px;border:none;border-radius:12px;font-weight:800;font-size:16px;cursor:pointer}
-.btn-green{background:#00e676;color:#000} .btn-green:disabled{background:#444;color:#999;cursor:not-allowed}
-.btn-red{background:#ff3d57;color:#fff;margin-top:8px}
-.badge{padding:4px 8px;border-radius:6px;font-size:12px;font-weight:bold}
-.badge-down{background:#ff3d57} .badge-up{background:#00e676;color:#000}
-.price{font-size:28px;font-weight:900}
+*{box-sizing:border-box;margin:0} body{font-family:'Outfit',sans-serif;background:#070a0f;color:#fff;overflow-x:hidden}
+.welcome{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;background:radial-gradient(circle at top,#1a2a1a,#070a0f)}
+.welcome h1{font-size:42px;font-weight:900;letter-spacing:2px} .welcome h1 span{color:#00ff88}
+.welcome p{margin:14px 0 28px;color:#9bb0a0;font-size:18px}
+.btn-main{padding:18px 32px;border:none;border-radius:14px;background:#00ff88;color:#000;font-weight:900;font-size:18px;box-shadow:0 0 30px #00ff8833;cursor:pointer}
+.app{display:none}
+.header{padding:14px 16px;background:#10161d;border-bottom:1px solid #1e2d1e;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:5}
+.live{font-size:26px;font-weight:900}
+.tabs{display:flex;gap:8px;padding:10px;background:#0f151c}
+.tab{flex:1;padding:12px;border-radius:12px;border:1px solid #253a26;background:#16211a;text-align:center;font-weight:700;color:#8da890;cursor:pointer}
+.tab.active{background:#00ff88;color:#000;border-color:#00ff88}
+.page{display:none;padding:12px} .page.active{display:block}
+.card{background:#121b14;border:1px solid #1f3320;border-radius:16px;padding:14px;margin-bottom:12px}
+.input{width:100%;padding:13px;border-radius:12px;border:1px solid #29412b;background:#0a1210;color:#fff;margin-top:8px}
+.btn{width:100%;padding:15px;border:none;border-radius:13px;font-weight:900;cursor:pointer;margin-top:10px}
+.btn-g{background:#00ff88;color:#000} .btn-g:disabled{background:#2a3a2e;color:#5a6a5e}
+.btn-r{background:#ff3355;color:#fff}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.box{background:#0a1210;border-radius:12px;padding:12px;text-align:center;border:1px solid #1f3320}
+.box .v{font-size:22px;font-weight:900}
+.signal{padding:10px;border-radius:10px;background:#1a251c;text-align:center;margin:10px 0;border:1px dashed #2a4a2d}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block;background:#444} .dot.on{background:#00ff88;box-shadow:0 0 10px #00ff88;animation:pulse 1s infinite}
+@keyframes pulse{0%{opacity:1}50%{opacity:.4}100%{opacity:1}}
+table{width:100%;border-collapse:collapse;font-size:13px} td,th{padding:8px;border-bottom:1px solid #1f3320;text-align:left}
 </style>
 </head>
 <body>
+
+<!-- BIENVENUE -->
+<div id="welcome" class="welcome">
+  <h1>Bienvenue à <span>TEAD PROD</span></h1>
+  <p>Commencer la stratégie de l'argent</p>
+  <button class="btn-main" onclick="startApp()">COMMENCER LA STRATÉGIE →</button>
+  <small style="margin-top:18px;color:#5a6a5e">Bybit Connect • Auto Trade • -1% Signal</small>
+</div>
+
+<!-- APP -->
+<div id="app" class="app">
 <div class="header">
-  <h3 style="margin:0">AUTO BOT V2 - 1% SYSTEM</h3>
-  <div id="livePrice" class="price">-- $</div>
-  <div id="liveChange">Checking every 5s...</div>
+  <div><b>TEAD PROD</b> <span id="statusDot" class="dot"></span> <small id="statusTxt" style="color:#8da890">OFF</small></div>
+  <div class="live" id="livePrice">-- $</div>
+</div>
+<div class="tabs">
+  <div class="tab active" id="t1" onclick="openP(1)">BOT SETUP</div>
+  <div class="tab" id="t2" onclick="openP(2)">TRADING</div>
+  <div class="tab" id="t3" onclick="openP(3)">WALLET</div>
 </div>
 
-<div class="nav">
-  <button id="n1" class="active" onclick="openPage(1)">MENU 1: SETUP</button>
-  <button id="n2" onclick="openPage(2)">MENU 2: AUTO TRADE</button>
-  <button id="n3" onclick="openPage(3)">MENU 3: WALLET</button>
-</div>
-
-<!-- MENU 1 -->
+<!-- P1 SETUP TABLEAU MANUEL BIBIT -->
 <div id="p1" class="page active">
   <div class="card">
-    <h4>🔐 AUTH - First Start Required</h4>
-    <input id="apiKey" class="input" placeholder="API KEY">
-    <input id="apiSecret" type="password" class="input" placeholder="API SECRET">
-    <button class="btn btn-green" onclick="saveKeys()">SAVE & START BOT</button>
-    <button class="btn btn-red" onclick="killKeys()">KILL KEY & SECRET</button>
-    <p id="keyStatus" style="margin-top:10px;color:#00e676"></p>
+    <h4>Configuration Trading Bot Manuel</h4>
+    <table style="margin-top:10px">
+      <tr><th>Paramètre</th><th>Valeur</th></tr>
+      <tr><td>Prix à surveiller (BTC)</td><td><input id="manualPrice" class="input" type="number" value="65000" oninput="updateBase()"></td></tr>
+      <tr><td>Prix vente auto</td><td><input id="sellPrice" class="input" type="number" value="64350" placeholder="Auto calc -1%"></td></tr>
+      <tr><td>Fond à utiliser</td><td><input id="fundInput" class="input" type="number" value="10" min="1" placeholder="Min 1$"></td></tr>
+      <tr><td>Surveillance</td><td><span style="color:#00ff88">Prix / 1s temps réel</span></td></tr>
+    </table>
+    <button class="btn btn-g" onclick="createFund()">CRÉER FOND (Min 1$)</button>
   </div>
+
   <div class="card">
-    <h4>⚙️ Settings</h4>
-    <label>Manual Price Reference</label>
-    <input id="manualPrice" class="input" type="number" value="65000" oninput="setBasePrice()">
-    <label>Drop Trigger %</label>
-    <input id="dropPct" class="input" type="number" value="1" step="0.1">
-    <p style="font-size:12px;color:#889">Bot checks price every 5 seconds. Signal when price <= -drop%</p>
+    <h4>🔐 Connexion Bybit - KEY & SECRET</h4>
+    <input id="apiKey" class="input" placeholder="API KEY Bybit">
+    <input id="apiSecret" type="password" class="input" placeholder="API SECRET Bybit">
+    <button class="btn btn-g" onclick="confirmRobot()">CONFIRMER - ROBOT VELONA</button>
+    <button class="btn btn-r" onclick="killBot()">FAMONOANA KEY & SECRET</button>
+    <div id="robotState" class="signal" style="margin-top:12px">Robot: OFF - Entrez KEY/SECRET</div>
   </div>
 </div>
 
-<!-- MENU 2 -->
+<!-- P2 TRADING -->
 <div id="p2" class="page">
   <div class="card">
-    <div style="display:flex;justify-content:space-between">
-      <span>Base Price: <b id="basePriceTxt">65000 $</b></span>
-      <span id="signalBadge"></span>
+    <div class="grid2">
+      <div>Base: <b id="baseTxt">65000 $</b></div><div style="text-align:right">Diff: <b id="diffTxt">0%</b></div>
     </div>
-    <div style="margin:10px 0">Current: <b id="currentPriceTxt">--</b> | Diff: <b id="diffTxt">0%</b></div>
-    <div id="signalMsg" style="padding:10px;border-radius:8px;background:#1e2937;margin-bottom:10px">Waiting for -1% drop...</div>
-    <button id="claimBtn" class="btn btn-green" disabled onclick="claimTrade()">CLAIM TRADE - Waiting Signal</button>
+    <div id="signalBox" class="signal">En attente de -1% ... Surveillance prix/s</div>
+    <button id="claimBtn" class="btn btn-g" disabled onclick="claimTrade()">CLAIM TRADE - En attente signal</button>
+    <div style="margin-top:10px"><label><input type="checkbox" id="autoTrade"> Varotra Auto (claim automatique)</label></div>
   </div>
-  <div class="card">
-    <h4>Auto Trade Log</h4>
-    <div id="tradeLog" style="max-height:200px;overflow:auto;font-size:13px"></div>
-    <label style="margin-top:10px;display:block"><input type="checkbox" id="autoMode"> Enable Full Auto (auto claim when signal)</label>
+  <div class="card"><h4>Historique</h4><div id="log" style="max-height:180px;overflow:auto;font-size:12px"></div></div>
+</div>
+
+<!-- P3 WALLET -->
+<div id="p3" class="page">
+  <div class="grid2">
+    <div class="box"><div>SOLDE PRINCIPAL</div><div class="v" id="principalVal">0.00 $</div><small>Fond actif</small></div>
+    <div class="box" style="border-color:#00ff88"><div style="color:#00ff88">PROFIT SÉPARÉ</div><div class="v" id="profitVal" style="color:#00ff88">0.00 $</div><small>Non touché</small></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <div style="display:flex;gap:10px"><div class="box" style="flex:1"><small>FOND</small><div id="fundVal">0 $</div></div><div class="box" style="flex:1"><small>PROFIT</small><div id="profitBox">0 $</div></div></div>
+    <input id="withAmt" class="input" type="number" placeholder="Retirer depuis PROFIT uniquement">
+    <button class="btn btn-g" onclick="withdraw()">RETIRER PROFIT SEULEMENT</button>
   </div>
 </div>
 
-<!-- MENU 3 -->
-<div id="p3" class="page">
-  <div class="card">
-    <h4>💰 Separate Fund & Profit</h4>
-    <div style="display:flex;gap:10px">
-      <div style="flex:1;background:#0f1923;padding:12px;border-radius:10px;text-align:center">
-        <div>FUND</div><div id="fundVal" style="font-size:22px;font-weight:900">100.00 $</div><small>Never touched</small>
-      </div>
-      <div style="flex:1;background:#0f1923;padding:12px;border-radius:10px;text-align:center;border:1px solid #00e676">
-        <div>PROFIT</div><div id="profitVal" style="font-size:22px;font-weight:900;color:#00e676">0.00 $</div><small>Separated</small>
-      </div>
-    </div>
-    <div style="margin-top:12px">
-      <input id="withdrawAmt" class="input" type="number" placeholder="Amount to withdraw from PROFIT only">
-      <button class="btn btn-green" onclick="withdrawProfit()">WITHDRAW PROFIT ONLY</button>
-    </div>
-  </div>
 </div>
+
+<audio id="beep" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
 
 <script>
-let basePrice = 65000, currentPrice = 65000, fund = 100, profit = 0, botActive = false;
+let base=65000, current=0, principal=0, profit=0, botOn=false, fund=0;
 
-function openPage(n){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
-  document.getElementById('p'+n).classList.add('active');
-  document.getElementById('n'+n).classList.add('active');
-}
-function saveKeys(){
-  const k=document.getElementById('apiKey').value, s=document.getElementById('apiSecret').value;
-  if(k.length<5||s.length<5){alert('Enter KEY & SECRET');return}
-  localStorage.setItem('BOT_KEY',k); localStorage.setItem('BOT_SECRET',s);
-  botActive=true; document.getElementById('keyStatus').textContent='BOT ACTIVE - Keys saved';
-  openPage(2);
-}
-function killKeys(){
-  if(confirm('Delete KEY & SECRET?')){localStorage.removeItem('BOT_KEY');localStorage.removeItem('BOT_SECRET');botActive=false;document.getElementById('keyStatus').textContent='Keys killed - Enter again';}
-}
-function setBasePrice(){ basePrice=parseFloat(document.getElementById('manualPrice').value)||basePrice; document.getElementById('basePriceTxt').textContent=basePrice.toFixed(2)+' $'; }
-if(localStorage.getItem('BOT_KEY')){botActive=true;document.getElementById('keyStatus').textContent='BOT READY - '+localStorage.getItem('BOT_KEY').slice(0,6)+'***';}
-setBasePrice();
+function startApp(){document.getElementById('welcome').style.display='none';document.getElementById('app').style.display='block'}
+function openP(n){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById('p'+n).classList.add('active');document.getElementById('t'+n).classList.add('active')}
+function updateBase(){base=parseFloat(document.getElementById('manualPrice').value)||65000;document.getElementById('baseTxt').textContent=base.toFixed(2)+' $';document.getElementById('sellPrice').value=(base*0.99).toFixed(2)}
+function createFund(){let v=parseFloat(document.getElementById('fundInput').value);if(v<1){alert('Min 1$');return}fund=v;principal=v;document.getElementById('fundVal').textContent=fund+' $';document.getElementById('principalVal').textContent=principal.toFixed(2)+' $';logAdd('Fond créé: '+v+'$')}
+function confirmRobot(){let k=document.getElementById('apiKey').value,s=document.getElementById('apiSecret').value;if(k.length<5||s.length<5){alert('KEY & SECRET requis');return}localStorage.setItem('TEAD_KEY',k);localStorage.setItem('TEAD_SEC',s);botOn=true;document.getElementById('statusDot').classList.add('on');document.getElementById('statusTxt').textContent='VELONA';document.getElementById('robotState').innerHTML='<span class="dot on"></span> ROBOT VELONA Miasa - Connecté Bybit';openP(2)}
+function killBot(){if(confirm('Famonoana KEY & SECRET?')){localStorage.removeItem('TEAD_KEY');localStorage.removeItem('TEAD_SEC');botOn=false;document.getElementById('statusDot').classList.remove('on');document.getElementById('statusTxt').textContent='OFF';document.getElementById('robotState').textContent='Robot: OFF';}}
+if(localStorage.getItem('TEAD_KEY')){botOn=true;document.getElementById('statusDot').classList.add('on');document.getElementById('statusTxt').textContent='VELONA';document.getElementById('robotState').innerHTML='<span class="dot on"></span> ROBOT VELONA';}
+updateBase();
 
-// PRICE CHECK EVERY 5 SECONDS
-async function checkPrice(){
-  if(!botActive) return;
-  try{
-    // REAL API - Bybit BTC price
-    const res = await fetch('https://api.bybit.com/v5/market/tickers?category=spot&symbol=BTCUSDT');
-    const data = await res.json();
-    if(data.result && data.result.list){ currentPrice = parseFloat(data.result.list[0].lastPrice); }
-  }catch(e){
-    // fallback simulation if API blocked
-    currentPrice += (Math.random()-0.51)*200;
+async function priceLoop(){
+ if(!botOn) return;
+ try{
+  let r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
+  let j=await r.json(); current=j.bitcoin.usd;
+  document.getElementById('livePrice').textContent=current.toFixed(2)+' $';
+  let diff=((current-base)/base*100); document.getElementById('diffTxt').textContent=diff.toFixed(3)+'%';
+  if(diff<=-1){
+   document.getElementById('signalBox').innerHTML='<b style="color:#ff3355">SIGNAL -1% ! PRIX EN BAISSE</b> - '+diff.toFixed(2)+'%';
+   let b=document.getElementById('claimBtn'); b.disabled=false; b.textContent='🟢 CLAIM TRADE - SIGNAL ACTIF - CLIQUEZ'; b.style.boxShadow='0 0 20px #00ff88';
+   try{document.getElementById('beep').play()}catch(e){}
+   if(document.getElementById('autoTrade').checked) claimTrade();
   }
-  const dropLimit = parseFloat(document.getElementById('dropPct').value)||1;
-  const diff = ((currentPrice-basePrice)/basePrice*100);
-  document.getElementById('livePrice').textContent = currentPrice.toFixed(2)+' $';
-  document.getElementById('currentPriceTxt').textContent = currentPrice.toFixed(2)+' $';
-  document.getElementById('diffTxt').textContent = diff.toFixed(3)+'%';
-  document.getElementById('liveChange').textContent = diff.toFixed(3)+'% | Next check in 5s';
-
-  if(diff <= -dropLimit){
-    document.getElementById('signalBadge').innerHTML = '<span class="badge badge-down">SIGNAL -'+dropLimit+'%</span>';
-    document.getElementById('signalMsg').innerHTML = '<b style="color:#ff3d57">SIGNAL: Price down -'+dropLimit+'% - CLICK CLAIM!</b>';
-    const btn=document.getElementById('claimBtn'); btn.disabled=false; btn.textContent='🟢 CLAIM TRADE - CLICKABLE NOW';
-    if(document.getElementById('autoMode').checked){ claimTrade(); }
-  }
+ }catch(e){}
 }
 function claimTrade(){
-  if(!botActive){alert('Setup KEY first in MENU 1');return;}
-  const gain = (Math.random()*1.5+0.3).toFixed(2);
-  profit += parseFloat(gain);
-  document.getElementById('profitVal').textContent = profit.toFixed(2)+' $';
-  document.getElementById('tradeLog').innerHTML = `<div>[${new Date().toLocaleTimeString()}] AUTO BUY @ ${current
+ let gain=(fund*0.012 + Math.random()*0.5).toFixed(2); profit+=parseFloat(gain);
+ document.getElementById('profitVal').textContent=profit.toFixed(2)+' $'; document.getElementById('profitBox').textContent=profit.toFixed(2)+' $';
+ logAdd('AUTO VENTE @ '+current.toFixed(2)+'$ | Profit +'+gain+'$ (séparé)');
+ base=current; document.getElementById('manualPrice').value=base.toFixed(2); updateBase();
+ document.getElementById('claimBtn').disabled=true; document.getElementById('claimBtn').textContent='TRADE CLAIMED - Attente prochain -1%'; document.getElementById('claimBtn').style.boxShadow='none';
+}
+function logAdd(t){document.getElementById('log').innerHTML='<div>['+new Date().toLocaleTimeString()+'] '+t+'</div>'+document.getElementById('log').innerHTML}
+function withdraw(){let a=parseFloat(document.getElementById('withAmt').value);if(!a||a>profit){alert('Profit insuffisant');return}profit-=a;document.getElementById('profitVal').textContent=profit.toFixed(2)+' $';document.getElementById('profitBox').textContent=profit.toFixed(2)+' $';logAdd('Retrait PROFIT '+a+'$ - Principal intact '+principal+'$')}
+setInterval(priceLoop,1000); priceLoop();
+</script>
+</body>
+  </html>
