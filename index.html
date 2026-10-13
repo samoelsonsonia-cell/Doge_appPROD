@@ -1,140 +1,113 @@
 <!DOCTYPE html>
-<html lang="mg"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TEAD V14 - SEARCH + DETAIL</title>
+<html lang="mg"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TEAD V15 - 4 TRADES FIX</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#0e0e12;color:#fff;font-family:Arial}
-#landing{position:fixed;inset:0;background:#0e0e12;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;z-index:9999}
+#landing{position:fixed;inset:0;background:#0e0e12;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;z-index:9999}
 #app{display:none;min-height:100vh;flex-direction:column}
-.btn-jaune{background:#ffd400;color:#000;padding:18px;border-radius:12px;border:none;font-weight:bold;width:100%}
-.card{background:#1a1a22;border-radius:14px;padding:10px;margin:6px;border:1px solid #222}
+.btn-jaune{background:#ffd400;color:#000;padding:16px;border-radius:12px;border:none;font-weight:bold;width:100%}
+.card{background:#1a1a22;border-radius:12px;padding:8px;margin:5px;border:1px solid #333}
+.cardTrade{border:2px solid #444;background:#1e1e28;border-radius:14px;padding:8px;margin:5px}
+.cardTrade.active{border-color:#ffd400}
 .topbar{display:flex;justify-content:space-between;padding:8px;background:#15151d;align-items:center}
-.searchBox{padding:8px;background:#12121a;border-bottom:2px solid #ffd400;display:flex;gap:6px;align-items:center}
-.searchBox input{flex:1;background:#000;border:1px solid #444;border-radius:20px;padding:10px 14px;color:#fff;font-size:14px}
-.searchBox button{background:#ffd400;color:#000;border:none;padding:10px 14px;border-radius:20px;font-weight:bold}
-.coinChip{display:inline-block;padding:8px 12px;margin:3px;border-radius:10px;background:#222;border:1px solid #444;font-size:12px;font-weight:bold;cursor:pointer;min-width:70px;text-align:center}.coinChip.active{background:#ffd400;color:#000;border-color:#ffd400}.coinChip small{display:block;font-size:9px;color:#0f0}.coinChip.active small{color:#000}
-.detailGrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
-.detailBox{background:#000;border-radius:10px;padding:8px;text-align:center;border:1px solid #222}
-.detailBox.up{border-color:#00c853;background:#00c85311}.detailBox.down{border-color:#ff3d57;background:#ff3d5711}
-.badge{padding:6px 12px;border-radius:20px;font-weight:bold;display:inline-block;font-size:13px}.badge-up{background:#00c853;color:#fff}.badge-down{background:#ff3d57;color:#fff}
-#tickCanvas{width:100%;height:110px;background:#000;border-radius:10px}
-.input-usd{width:100%;background:#000;border:2px solid #ffd400;border-radius:12px;padding:10px;font-size:20px;color:#fff;text-align:center;font-weight:bold}
-.btn-vert{background:#00c853;color:#fff;padding:14px;border-radius:12px;border:none;font-weight:bold;flex:1}.btn-mena{background:#ff3d57;color:#fff;padding:14px;border-radius:12px;border:none;font-weight:bold;flex:1}
-.sideDrawer{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:3000}.sideDrawer.active{display:block}.drawer{width:90%;max-width:380px;height:100%;background:#15151d;padding:14px;overflow:auto}
+.searchBox{padding:6px;background:#12121a;border-bottom:2px solid #ffd400;display:flex;gap:5px}
+.searchBox input{flex:1;background:#000;border:1px solid #444;border-radius:20px;padding:9px 12px;color:#fff}
+.searchBox button{background:#ffd400;color:#000;border:none;padding:8px 12px;border-radius:20px;font-weight:bold}
+.coinChip{display:inline-block;padding:6px 10px;margin:2px;border-radius:8px;background:#222;border:1px solid #444;font-size:11px;font-weight:bold;cursor:pointer}.coinChip.active{background:#ffd400;color:#000}
+.coinChip small{display:block;font-size:8px;color:#0f0}
+.tradeGrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:6px}
+.prixBox{display:flex;justify-content:space-between;background:#000;border-radius:8px;padding:6px;margin:4px 0;font-size:11px}
+.badge{padding:6px 10px;border-radius:20px;font-weight:bold;font-size:12px;display:inline-block}.badge-up{background:#00c853;color:#fff}.badge-down{background:#ff3d57;color:#fff}
+.singlePct{margin-top:6px;padding:10px;border-radius:10px;text-align:center;font-weight:bold;font-size:13px}
+.singlePct.up{background:#00c85322;border:1px solid #00c853;color:#00c853}.singlePct.down{background:#ff3d5722;border:1px solid #ff3d57;color:#ff3d57}
+#tickCanvas{width:100%;height:90px;background:#000;border-radius:8px}
+.input-usd{width:100%;background:#000;border:1px solid #ffd400;border-radius:8px;padding:8px;color:#fff;text-align:center;font-weight:bold}
+.btn-vert{background:#00c853;color:#fff;padding:10px;border-radius:8px;border:none;font-weight:bold;flex:1;font-size:11px}.btn-mena{background:#ff3d57;color:#fff;padding:10px;border-radius:8px;border:none;font-weight:bold;flex:1;font-size:11px}
+.sideDrawer{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:3000}.sideDrawer.active{display:block}.drawer{width:90%;max-width:360px;height:100%;background:#15151d;padding:12px;overflow:auto}
 </style>
 <script>function startApp(){document.getElementById('landing').style.display='none';document.getElementById('app').style.display='flex';setTimeout(initApp,200);}function openD(i){document.getElementById('drawer-'+i).classList.add('active')}function closeD(i){document.getElementById('drawer-'+i).classList.remove('active')}</script>
 </head><body>
 <audio id="moneySound" preload="auto" src="https://assets.mixkit.co/sfx/preview/mixkit-coins-sound-2003.mp3"></audio>
 <audio id="cheerSound" preload="auto" src="https://assets.mixkit.co/sfx/preview/mixkit-crowd-cheering-360.mp3"></audio>
 
-<div id="landing"><div style="font-size:44px">💎</div><h2>TEAD V14 SEARCH</h2><p style="color:#00c853">Écran malalaka + Détail complet %</p><button class="btn-jaune" onclick="startApp()">✅ CLIQUEZ ICI</button></div>
+<div id="landing"><div style="font-size:38px">💎</div><h3>TEAD V15 - 4 TRADES FIX</h3><p style="color:#00c853;font-size:12px">Trade 1-4 + 1 tableau + Live FIX</p><button class="btn-jaune" onclick="startApp()">✅ CLIQUEZ ICI</button></div>
 
 <div id="app">
-<div class="topbar"><button onclick="openD('gauche')" style="background:#ffd400;color:#000;padding:7px 12px;border-radius:8px;border:none;font-weight:bold">☰ KEY</button><div style="text-align:center"><small>Sold: <b id="soldeTop" style="color:#ffd400">-- $</b></small><br><small id="connState" style="color:#0f0;font-size:10px">● LIVE</small></div><button onclick="openD('wallet')" style="background:#222;border:1px solid #444;color:#fff;padding:7px 12px;border-radius:8px">👛</button></div>
+<div class="topbar"><button onclick="openD('gauche')" style="background:#ffd400;color:#000;padding:6px 10px;border-radius:8px;border:none;font-weight:bold;font-size:12px">☰ KEY</button><div style="text-align:center"><small>Sold: <b id="soldeTop" style="color:#ffd400">-- $</b></small><br><small id="connState" style="color:#0f0;font-size:10px">● LIVE FIX</small></div><button onclick="openD('wallet')" style="background:#222;border:1px solid #444;color:#fff;padding:6px 10px;border-radius:8px">👛</button></div>
 
-<!-- BARRE DE RECHERCHE - MALALAKA ECRAN -->
-<div class="searchBox">
-<input id="searchInput" placeholder="🔍 Mitady vola... DOGE, PEPE, BTC, ETH" oninput="filterCoins()" onfocus="showAll()">
-<button onclick="toggleList()">📋</button>
-</div>
-<div id="coinList" style="padding:6px;background:#12121a;max-height:110px;overflow-y:auto;display:flex;flex-wrap:wrap"></div>
+<div class="searchBox"><input id="searchInput" placeholder="🔍 Mitady vola... DOGE, BTC, PEPE" oninput="filterCoins()"><button onclick="toggleList()">📋</button></div>
+<div id="coinList" style="padding:4px;background:#12121a;max-height:90px;overflow-y:auto;display:flex;flex-wrap:wrap"></div>
 
-<div style="flex:1;overflow-y:auto;padding-bottom:8px">
-<!-- DETAIL COMPLET PLAN -->
-<div class="card" style="border:2px solid #ffd400">
-<div style="display:flex;justify-content:space-between;align-items:center"><div><b id="activeCoinTxt">DOGE</b> - REAL Bybit<br><small>Ananako: <b id="myBalTxt" style="color:#ffd400">--</b> | Balance USDT: <span id="usdtBal">--</span></small></div><div id="bigPct" class="badge badge-up" style="font-size:16px">-- %</div></div>
+<div style="flex:1;overflow-y:auto">
+<!-- 4 TRADES SAMIHAFA - MITOVY PLAN -->
+<div class="tradeGrid" id="tradeGrid"></div>
 
-<!-- PLAN ANTIPIRIHANY: NIAKATRA % / NIDINA % / DETAIL -->
-<div class="detailGrid">
-<div class="detailBox"><small style="color:#888">Nividy tamin':</small><br><b id="entryPrice" style="color:#00c853">$0.00</b><br><small id="entryTime" style="color:#888">--</small></div>
-<div class="detailBox"><small style="color:#888">Prix ankehitriny:</small><br><b id="exitPrice" style="color:#ffd400">$0.00</b><br><small id="liveTime" style="color:#888">LIVE</small></div>
-<div class="detailBox" id="upBox"><small>Niakatra:</small><br><b id="upPct" style="color:#00c853">+0.00%</b><br><small id="upDollar" style="color:#00c853">+$0.00</small></div>
-<div class="detailBox" id="downBox"><small>Nidina:</small><br><b id="downPct" style="color:#ff3d57">-0.00%</b><br><small id="downDollar" style="color:#ff3d57">$0.00</small></div>
-</div>
-
-<div style="margin-top:8px;background:#000;border-radius:10px;padding:8px;border:1px dashed #ffd400">
-<small style="color:#888">Détail complet plan:</small><br>
-<small>• Qty ananako: <b id="detailQty">--</b></small><br>
-<small>• Invest: <b id="detailInvest">--</b> $</small><br>
-<small>• Fee Bybit ~0.1%: <b id="detailFee">--</b></small><br>
-<small>• Profit net: <b id="detailNet" style="color:#00c853">--</b></small>
-</div>
-
-<canvas id="tickCanvas" width="360" height="110" style="margin-top:8px"></canvas>
-<div style="display:flex;justify-content:space-between;margin-top:4px"><small style="color:#888">Prix:</small><b id="livePrice" style="color:#ffd400;font-size:22px">$--</b></div>
-<small id="lastTick" style="color:#666">Tick: --</small>
-</div>
-
-<div class="card" style="border:2px solid #ffd400">
-<small>💵 Invest - Feo vola + horakoraka</small>
-<div style="display:flex;gap:4px;margin-top:6px"><button onclick="setUsd(1)" style="flex:1;background:#ffd400;color:#000;padding:6px;border-radius:8px;font-weight:bold;border:none">1$</button><button onclick="setUsd(5)" style="flex:1;background:#222;color:#fff;padding:6px;border-radius:8px;border:1px solid #444">5$</button><button onclick="setUsd(10)" style="flex:1;background:#222;color:#fff;padding:6px;border-radius:8px;border:1px solid #444">10$</button><button onclick="setUsd(20)" style="flex:1;background:#222;color:#fff;padding:6px;border-radius:8px;border:1px solid #444">20$</button></div>
-<input id="amountUsd" class="input-usd" type="number" value="1" min="1" style="margin-top:6px">
-<div style="text-align:center;color:#ffd400;font-size:11px;margin-top:3px">= ~<span id="conv">--</span> <span class="convCoin">DOGE</span></div>
-<div style="margin-top:6px;padding:7px;background:#000;border-radius:10px;border:1px dashed #ffd400"><label><input type="checkbox" id="autoOn"> 🔔 Auto Sell</label> Rehefa + <input id="autoPct" type="number" value="1.2" style="width:45px;background:#222;color:#fff;border:1px solid #ffd400;border-radius:5px;text-align:center">% <button onclick="saveAuto()" style="background:#00c853;color:#fff;border:none;padding:5px 10px;border-radius:6px">OK</button><br><small style="color:#888">CHA-CHING + horakoraka rehefa profit</small></div>
-</div>
-
-<div style="display:flex;gap:6px;margin:6px"><button id="buyBtn" class="btn-vert" onclick="doTrade('Buy')">↗ BUY REAL</button><button id="sellBtn" class="btn-mena" onclick="doTrade('Sell')">↓ SELL REAL</button></div>
-
-<div class="card"><div style="display:flex;justify-content:space-between"><b>Histo REAL - Click vola = Détail</b><button onclick="clearH()" style="background:#ff3d57;color:#fff;border:none;padding:3px 8px;border-radius:6px;font-size:10px">🗑️</button></div><div id="histo" style="margin-top:6px;font-size:11px">Tsy misy</div></div>
+<div class="card"><div style="display:flex;justify-content:space-between"><b>Histo REAL</b><button onclick="clearH()" style="background:#ff3d57;color:#fff;border:none;padding:3px 8px;border-radius:6px;font-size:10px">🗑️</button></div><div id="histo" style="margin-top:6px;font-size:10px">Tsy misy</div></div>
 </div>
 </div>
 
-<div id="detailView" style="display:none;position:fixed;inset:0;background:#0e0e12;z-index:5000;padding:12px;overflow:auto"><button onclick="this.parentElement.style.display='none'" style="background:#ffd400;color:#000;padding:8px 14px;border-radius:8px;font-weight:bold;border:none">← RETOUR</button><h3 id="detailTitle">DETAIL</h3><div style="background:#1a1a22;padding:10px;border-radius:10px"><b id="detailBal">--</b><br><small id="detailPrice">Prix LIVE --</small><br><div class="detailGrid" style="margin-top:8px"><div class="detailBox"><small>Nividy</small><br><b id="dEntry">$0</b></div><div class="detailBox"><small>Ankehitriny</small><br><b id="dNow">$0</b></div><div class="detailBox"><small>Niakatra/Nidina %</small><br><b id="dPct">--</b></div><div class="detailBox"><small>Profit $</small><br><b id="dProfit">--</b></div></div></div><div id="detailHisto" style="margin-top:10px;font-size:11px;background:#000;padding:8px;border-radius:8px"></div></div>
-
-<div id="drawer-gauche" class="sideDrawer" onclick="closeD('gauche')"><div class="drawer" onclick="event.stopPropagation()"><h3>KEY</h3><input id="apiKey" style="width:100%;padding:10px;border-radius:8px;background:#000;border:1px solid #444;color:#fff"><input id="apiSecret" type="password" style="width:100%;padding:10px;border-radius:8px;background:#000;border:1px solid #444;color:#fff;margin-top:6px"><button onclick="saveKeys()" class="btn-jaune" style="margin-top:8px">💾 TEHIRIZO</button><div style="margin-top:10px;background:#000;padding:8px;border-radius:8px"><small>Balance Bybit:</small><br><b id="fond2">--</b><br><button onclick="fetchBalance()" style="background:#00c853;color:#fff;border:none;padding:5px 8px;border-radius:6px;margin-top:5px">🔄 Refresh</button></div><br><button onclick="closeD('gauche')" style="background:#222;color:#fff;padding:10px;width:100%;border-radius:8px;border:1px solid #444">FERMER</button></div></div>
-<div id="drawer-wallet" class="sideDrawer" onclick="closeD('wallet')"><div class="drawer" style="margin-left:auto" onclick="event.stopPropagation()"><b>👛 WALLET REAL</b><div class="card" style="margin-top:10px"><b id="fond">--</b></div><button onclick="closeD('wallet')" style="background:#222;color:#fff;padding:10px;width:100%;border-radius:8px;border:1px solid #444;margin-top:10px">Fermer</button></div></div>
+<div id="drawer-gauche" class="sideDrawer" onclick="closeD('gauche')"><div class="drawer" onclick="event.stopPropagation()"><h3>KEY</h3><input id="apiKey" style="width:100%;padding:9px;border-radius:8px;background:#000;border:1px solid #444;color:#fff"><input id="apiSecret" type="password" style="width:100%;padding:9px;border-radius:8px;background:#000;border:1px solid #444;color:#fff;margin-top:5px"><button onclick="saveKeys()" class="btn-jaune" style="margin-top:8px">💾 TEHIRIZO</button><div style="margin-top:8px;background:#000;padding:7px;border-radius:8px"><small>Balance:</small><br><b id="fond2">--</b><br><button onclick="fetchBalance()" style="background:#00c853;color:#fff;border:none;padding:4px 8px;border-radius:6px;margin-top:4px">🔄 Refresh</button></div><br><button onclick="closeD('gauche')" style="background:#222;color:#fff;padding:8px;width:100%;border-radius:8px;border:1px solid #444">FERMER</button></div></div>
+<div id="drawer-wallet" class="sideDrawer" onclick="closeD('wallet')"><div class="drawer" style="margin-left:auto" onclick="event.stopPropagation()"><b>👛 WALLET</b><div class="card" style="margin-top:8px"><b id="fond">--</b></div><button onclick="closeD('wallet')" style="background:#222;color:#fff;padding:8px;width:100%;border-radius:8px;border:1px solid #444;margin-top:8px">Fermer</button></div></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 <script>
-let allCoins=["DOGEUSDT","PEPEUSDT","BONKUSDT","SHIBUSDT","FLOKIUSDT","BNBUSDT","BTCUSDT","ETHUSDT","SOLUSDT","XRPUSDT","ADAUSDT","AVAXUSDT","LINKUSDT","MATICUSDT","LTCUSDT","DOTUSDT","TRXUSDT","UNIUSDT","NEARUSDT","ARBUSDT","SUIUSDT","OPUSDT","APTUSDT","ETCUSDT","ATOMUSDT","FILUSDT","AAVEUSDT","MKRUSDT","RENDERUSDT","FETUSDT"];
-let favCoins=["DOGEUSDT","BTCUSDT","ETHUSDT","SOLUSDT","PEPEUSDT"];
-let curSym="DOGEUSDT",entry=0,entryTime=null,ws=null,lastP=0,hist=[],ctx=null,realBal=0,realUsdt=0,prices={},autoCfg=JSON.parse(localStorage.getItem('auto_cfg')||'{}'),showAllCoins=false;
+let allCoins=["DOGEUSDT","PEPEUSDT","BONKUSDT","SHIBUSDT","FLOKIUSDT","BNBUSDT","BTCUSDT","ETHUSDT","SOLUSDT","XRPUSDT","ADAUSDT","AVAXUSDT","LINKUSDT","LTCUSDT","DOTUSDT","TRXUSDT","UNIUSDT","NEARUSDT","SUIUSDT","OPUSDT"];
+let favCoins=["DOGEUSDT","PEPEUSDT","BTCUSDT","ETHUSDT","SOLUSDT","BNBUSDT","SHIBUSDT","BONKUSDT"];
+let prices={},trades=[],ws=null,autoCfg=JSON.parse(localStorage.getItem('auto_cfg')||'{}'),showAll=false;
 
 function initApp(){
  let k=localStorage.getItem('bybit_key'); if(k) document.getElementById('apiKey').value=k;
  let s=localStorage.getItem('bybit_secret'); if(s) document.getElementById('apiSecret').value=s;
- let c=document.getElementById('tickCanvas'); if(c) ctx=c.getContext('2d');
- buildList(favCoins);
- connect(); fetchAll(); setInterval(fetchAll,2500);
+ let saved=JSON.parse(localStorage.getItem('trades_cfg')||'null');
+ if(saved&&saved.length===4) trades=saved; else trades=[
+  {id:1,sym:"DOGEUSDT",usd:1,entry:0,entryT:"--"},
+  {id:2,sym:"PEPEUSDT",usd:1,entry:0,entryT:"--"},
+  {id:3,sym:"BTCUSDT",usd:1,entry:0,entryT:"--"},
+  {id:4,sym:"SOLUSDT",usd:1,entry:0,entryT:"--"}
+ ];
+ buildList(favCoins); renderTrades();
+ connect(); fetchAll(); setInterval(fetchAll,2000);
  if(k) fetchBalance();
  let h=localStorage.getItem('trade_histo'); if(h) document.getElementById('histo').innerHTML=h;
- let e=localStorage.getItem('entry_'+curSym); if(e){entry=parseFloat(e); document.getElementById('entryPrice').innerText='$'+entry.toFixed(6);}
- try{Notification.requestPermission();}catch(e){}
 }
-function buildList(list){let html='';list.forEach(sym=>{let n=sym.replace('USDT',''); let p=prices[sym]? '$'+Number(prices[sym]).toFixed(sym.includes('BTC')?2:6):'LIVE'; html+=`<span class="coinChip ${sym===curSym?'active':''}" data-sym="${sym}" onclick="selectCoin('${sym}')">${n}<small>${p}</small></span>`}); document.getElementById('coinList').innerHTML=html||'<small style="color:#888;padding:8px">Tsy misy vola - Soraty DOGE, BTC...</small>';}
-function filterCoins(){let q=document.getElementById('searchInput').value.toUpperCase().trim(); if(!q){buildList(favCoins);return;} let filtered=allCoins.filter(c=>c.includes(q)); buildList(filtered.slice(0,20));}
-function showAll(){if(!showAllCoins){buildList(allCoins.slice(0,20));}}
-function toggleList(){showAllCoins=!showAllCoins; if(showAllCoins) buildList(allCoins.slice(0,30)); else buildList(favCoins); document.getElementById('searchInput').value='';}
-function selectCoin(sym){
- let prev=curSym; curSym=sym; localStorage.setItem('last_coin',sym);
- // Tehirizo entry taloha
- if(prev!==sym){let e=localStorage.getItem('entry_'+sym); entry=e?parseFloat(e):0; document.getElementById('entryPrice').innerText=entry?'$'+entry.toFixed(6):'$0.00'; hist=[];}
- document.getElementById('activeCoinTxt').innerText=sym.replace('USDT',''); document.querySelectorAll('.convCoin').forEach(x=>x.innerText=sym.replace('USDT',''));
- document.getElementById('coinList').querySelectorAll('.coinChip').forEach(el=>el.classList.toggle('active',el.dataset.sym===sym));
- if(prices[sym]) showP(prices[sym]);
- fetchBalance();
- // Rehefa double click = détail
- if(window.lastClickSym===sym && Date.now()-window.lastClickTime<400){voirDetail(sym);}
- window.lastClickSym=sym; window.lastClickTime=Date.now();
+function buildList(list){let html='';list.forEach(sym=>{let n=sym.replace('USDT',''); let p=prices[sym]? '$'+Number(prices[sym]).toFixed(sym.includes('BTC')?2:6):'...'; html+=`<span class="coinChip" data-sym="${sym}" onclick="pickCoin('${sym}')">${n}<small>${p}</small></span>`}); document.getElementById('coinList').innerHTML=html;}
+function filterCoins(){let q=document.getElementById('searchInput').value.toUpperCase().trim(); if(!q){buildList(favCoins);return;} let f=allCoins.filter(c=>c.includes(q)); buildList(f.slice(0,20));}
+function toggleList(){showAll=!showAll; buildList(showAll?allCoins.slice(0,30):favCoins);}
+function pickCoin(sym){ // Safidio vola ho an'ny trade active farany
+ let id=parseInt(localStorage.getItem('activeTradeId')||'1'); let t=trades.find(x=>x.id===id); if(!t) t=trades[0]; t.sym=sym; localStorage.setItem('trades_cfg',JSON.stringify(trades)); renderTrades(); fetchAll();
 }
-function fetchAll(){allCoins.forEach(s=>{fetch('https://api.bybit.com/v5/market/tickers?category=spot&symbol='+s).then(r=>r.json()).then(j=>{if(j.result&&j.result.list){let p=parseFloat(j.result.list[0].lastPrice); prices[s]=p; let el=document.querySelector('.coinChip[data-sym="'+s+'"] small'); if(el) el.innerText='$'+p.toFixed(s.includes('BTC')?2:6); if(s===curSym) showP(p);}}).catch(()=>{});});}
-function draw(){let c=document.getElementById('tickCanvas'); if(!c||!ctx) return; ctx.clearRect(0,0,c.width,c.height); if(hist.length<2) return; let v=hist.map(x=>x.value); let min=Math.min(...v),max=Math.max(...v),rg=max-min||0.000001; ctx.strokeStyle='#ffd400'; ctx.lineWidth=2; ctx.beginPath(); hist.forEach((pp,i)=>{let x=i/(hist.length-1)*c.width; let y=c.height-(pp.value-min)/rg*c.height*0.8-10; if(i===0)ctx.moveTo(x,y); else ctx.lineTo(x,y);}); ctx.stroke();}
-function showP(p){
- lastP=p; document.getElementById('livePrice').innerText='$'+p.toFixed(6); document.getElementById('exitPrice').innerText='$'+p.toFixed(6); document.getElementById('liveTime').innerText=new Date().toLocaleTimeString(); document.getElementById('lastTick').innerText='Tick LIVE: $'+p.toFixed(6)+' - '+new Date().toLocaleTimeString();
- let usd=parseFloat(document.getElementById('amountUsd').value)||1; document.getElementById('conv').innerText=(usd/p).toFixed(2); hist.push({value:p}); if(hist.length>60) hist.shift(); draw();
- // CALCUL ANTIPIRIHANY NIAKATRA/NIDINA
- if(entry>0){
-  let diffPct=(p-entry)/entry*100; let diffUsd=(p-entry)/entry*usd; let fee=usd*0.001; let net=diffUsd-fee;
-  document.getElementById('bigPct').innerText=(diffPct>=0?'+':'')+diffPct.toFixed(2)+'%'; document.getElementById('bigPct').className='badge '+(diffPct>=0?'badge-up':'badge-down');
-  document.getElementById('upPct').innerText=(diffPct>=0?'+':'')+diffPct.toFixed(3)+'%'; document.getElementById('upDollar').innerText='+$'+(diffPct>=0?diffUsd.toFixed(4):'0.00');
-  document.getElementById('downPct').innerText=(diffPct<0?'':'-')+diffPct.toFixed(3)+'%'; document.getElementById('downDollar').innerText=(diffPct<0?'$':'$')+diffUsd.toFixed(4);
-  document.getElementById('detailQty').innerText=(usd/entry).toFixed(2)+' '+curSym.replace('USDT',''); document.getElementById('detailInvest').innerText=usd; document.getElementById('detailFee').innerText='$'+fee.toFixed(4); document.getElementById('detailNet').innerText=(net>=0?'+$':'$')+net.toFixed(4); document.getElementById('detailNet').style.color=net>=0?'#00c853':'#ff3d57';
-  document.getElementById('upBox').style.borderColor=diffPct>=0?'#00c853':'#333'; document.getElementById('downBox').style.borderColor=diffPct<0?'#ff3d57':'#333';
-  let cfg=autoCfg[curSym]; if(cfg&&cfg.on&&diffPct>=cfg.pct){doTrade('Sell'); playSound(curSym.replace('USDT',''), net, diffPct); autoCfg[curSym].on=false; localStorage.setItem('auto_cfg',JSON.stringify(autoCfg)); document.getElementById('autoOn').checked=false;}
- }
+
+function renderTrades(){
+ let html=''; trades.forEach(t=>{
+  let name=t.sym.replace('USDT',''); let pr=prices[t.sym]||0; let cfg=autoCfg[t.sym]||{on:false,pct:1.2};
+  let diff=0; if(t.entry>0&&pr>0) diff=(pr-t.entry)/t.entry*100;
+  let singleBox=''; if(t.entry>0){
+   if(diff>=0) singleBox=`<div class="singlePct up">↗ Miakatra +${diff.toFixed(3)}%<br>+ $${((pr-t.entry)/t.entry*t.usd).toFixed(4)}</div>`;
+   else singleBox=`<div class="singlePct down">↘ Midina ${diff.toFixed(3)}%<br>$${((pr-t.entry)/t.entry*t.usd).toFixed(4)}</div>`;
+  } else singleBox=`<div class="singlePct" style="background:#222;border:1px solid #444;color:#888">Tsy mbola nividy</div>`;
+  html+=`<div class="cardTrade ${t.id===parseInt(localStorage.getItem('activeTradeId')||'1')?'active':''}" onclick="setActive(${t.id})">
+   <div style="display:flex;justify-content:space-between;align-items:center"><b>TRADE ${t.id} - ${name}</b><span class="badge ${diff>=0?'badge-up':'badge-down'}" id="badge-${t.id}">${t.entry>0?(diff>=0?'+':'')+diff.toFixed(2)+'%':'-- %'}</span></div>
+   <div class="prixBox"><span>Nividy tamin':</span><b id="entry-${t.id}" style="color:#00c853">$${t.entry? t.entry.toFixed(6):'0.00'}</b></div>
+   <div class="prixBox"><span>Prix ankehitriny LIVE:</span><b id="live-${t.id}" style="color:#ffd400">$${pr? pr.toFixed(6):'--'}</b></div>
+   ${singleBox}
+   <div style="display:flex;gap:4px;margin-top:6px"><input id="usd-${t.id}" type="number" value="${t.usd}" min="1" style="flex:1;background:#000;border:1px solid #ffd400;border-radius:6px;color:#fff;text-align:center;padding:4px" onchange="saveUsd(${t.id})"><button onclick="changeSym(${t.id})" style="background:#222;border:1px solid #444;color:#fff;padding:4px 6px;border-radius:6px;font-size:9px">Vola</button></div>
+   <div style="margin-top:4px;font-size:10px"><label><input type="checkbox" id="auto-${t.id}" ${cfg.on?'checked':''}> Auto</label> +<input id="autoPct-${t.id}" type="number" value="${cfg.pct}" style="width:32px;background:#000;border:1px solid #444;color:#fff;border-radius:4px;text-align:center">% <button onclick="saveAuto(${t.id})" style="background:#00c853;color:#fff;border:none;padding:2px 6px;border-radius:4px;font-size:9px">OK</button></div>
+   <div style="display:flex;gap:4px;margin-top:6px"><button class="btn-vert" onclick="doTrade('Buy',${t.id})">BUY</button><button class="btn-mena" onclick="doTrade('Sell',${t.id})">SELL</button></div>
+  </div>`;
+ });
+ document.getElementById('tradeGrid').innerHTML=html;
 }
-function setUsd(v){document.getElementById('amountUsd').value=v; let p=lastP||0.08; document.getElementById('conv').innerText=(v/p).toFixed(2);}
-function saveAuto(){let pct=parseFloat(document.getElementById('autoPct').value)||1.2; let on=document.getElementById('autoOn').checked; autoCfg[curSym]={on,pct}; localStorage.setItem('auto_cfg',JSON.stringify(autoCfg)); alert('✅ Auto '+curSym.replace('USDT','')+' '+(on?'ON +'+pct+'% + Feo vola':'OFF'));}
-function playSound(coin,profit,pct){let m=document.getElementById('moneySound'); let c=document.getElementById('cheerSound'); m.currentTime=0; m.play().catch(()=>{}); setTimeout(()=>{c.currentTime=0;c.play().catch(()=>{});},700); if(navigator.vibrate) navigator.vibrate([120,60,120,60,400]); let pop=document.createElement('div'); pop.innerHTML='🎉💰<br>'+coin+' PROFIT<br>+$'+profit.toFixed(4)+'<br>+'+pct.toFixed(2)+'%<br>Cha-ching!'; pop.style='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#ffd400;color:#000;padding:20px;border-radius:18px;font-weight:bold;text-align:center;z-index:9999;box-shadow:0 0 20px #ffd400'; document.body.appendChild(pop); setTimeout(()=>pop.remove(),3500); if(Notification.permission==='granted') new Notification('💰🎉 PROFIT '+coin+'!',{body:'+$'+profit.toFixed(4)+' ('+pct.toFixed(2)+'%) - Afaka mividy indray!'});}
-function voirDetail(sym){let coin=sym.replace('USDT',''); let view=document.getElementById('detailView'); view.style.display='block'; document.getElementById('detailTitle').innerText='DETAIL '+coin+' - PLAN ANTIPIRIHANY'; document.getElementById('detailBal').innerText=realBal.toFixed(4)+' '+coin+' | USDT: '+realUsdt.toFixed(2); document.getElementById('detailPrice').innerText='Prix LIVE $'+(prices[sym]||lastP||0).toFixed(6); document.getElementById('dEntry').innerText=entry?'$'+entry.toFixed(6):'$0'; document.getElementById('dNow').innerText='$'+(prices[sym]||lastP||0).toFixed(6); if(entry>0){let diff=(prices[sym]-entry)/entry*100; document.getElementById('dPct').innerText=diff.toFixed(3)+'%'; document.getElementById('dProfit').innerText='$'+((prices[sym]-entry)/entry*(parseFloat(document.getElementById('amountUsd').value)||1)).toFixed(4);} let all=localStorage.getItem('trade_histo')||''; let filt=all.split('</div>').filter(p=>p.toUpperCase().includes(coin)).join('</div>'); document.getElementById('detailHisto').innerHTML=filt||'Tsy misy trade '+coin;}
+function setActive(id){localStorage.setItem('activeTradeId',id); renderTrades();}
+function saveUsd(id){let t=trades.find(x=>x.id===id); t.usd=parseFloat(document.getElementById('usd-'+id).value)||1; localStorage.setItem('trades_cfg',JSON.stringify(trades));}
+function changeSym(id){setActive(id); document.getElementById('searchInput').focus(); alert('Soraty anarana vola eo ambony - ohatra PEPE na BTC - dia click ilay vola');}
+function saveAuto(id){let t=trades.find(x=>x.id===id); let on=document.getElementById('auto-'+id).checked; let pct=parseFloat(document.getElementById('autoPct-'+id).value)||1.2; autoCfg[t.sym]={on,pct}; localStorage.setItem('auto_cfg',JSON.stringify(autoCfg)); alert('Trade '+id+' '+t.sym.replace('USDT','')+' Auto '+(on?'ON +'+pct+'%':'OFF'));}
+function fetchAll(){allCoins.forEach(s=>{fetch('https://api.bybit.com/v5/market/tickers?category=spot&symbol='+s).then(r=>r.json()).then(j=>{if(j.result&&j.result.list){let p=parseFloat(j.result.list[0].lastPrice); prices[s]=p; let el=document.querySelector('.coinChip[data-sym="'+s+'"] small'); if(el) el.innerText='$'+p.toFixed(s.includes('BTC')?2:6); updatePrice(s,p);}}).catch(()=>{});});}
+function updatePrice(sym,p){trades.forEach(t=>{if(t.sym===sym){let liveEl=document.getElementById('live-'+t.id); if(liveEl) liveEl.innerText='$'+p.toFixed(6); let badge=document.getElementById('badge-'+t.id); if(t.entry>0&&badge){let diff=(p-t.entry)/t.entry*100; badge.innerText=(diff>=0?'+':'')+diff.toFixed(2)+'%'; badge.className='badge '+(diff>=0?'badge-up':'badge-down'); renderTrades(); // refresh single box
+ let cfg=autoCfg[sym]; if(cfg&&cfg.on){let diffPct=(p-t.entry)/t.entry*100; if(diffPct>=cfg.pct){doTrade('Sell',t.id); playSound(sym.replace('USDT',''), (diffPct/100*t.usd), diffPct); autoCfg[sym].on=false; localStorage.setItem('auto_cfg',JSON.stringify(autoCfg));}} } } });}
+function playSound(coin,profit,pct){let m=document.getElementById('moneySound'); let c=document.getElementById('cheerSound'); m.currentTime=0; m.play().catch(()=>{}); setTimeout(()=>{c.currentTime=0;c.play().catch(()=>{});},600); if(navigator.vibrate) navigator.vibrate([100][50][100][50][300]); let pop=document.createElement('div'); pop.innerHTML='🎉💰<br>Trade '+coin+'<br>+$'+profit.toFixed(4)+'!<br>Cha-ching!'; pop.style='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#ffd400;color:#000;padding:16px;border-radius:16px;font-weight:bold;text-align:center;z-index:9999'; document.body.appendChild(pop); setTimeout(()=>pop.remove(),3000); if(Notification.permission==='granted') new Notification('💰 PROFIT '+coin,{body:'+$'+profit.toFixed(4)});}
 function saveKeys(){localStorage.setItem('bybit_key',document.getElementById('apiKey').value.trim()); localStorage.setItem('bybit_secret',document.getElementById('apiSecret').value.trim()); alert('KEY voatahiry'); closeD('gauche'); fetchBalance();}
 function clearH(){if(confirm('Fafana histo?')){document.getElementById('histo').innerHTML='Tsy misy'; localStorage.removeItem('trade_histo');}}
-async function fetchBalance(){let key=localStorage.getItem('bybit_key'); let sec=localStorage.getItem('bybit_secret'); if(!key||!sec) return; let ts=Date.now().toString(); let rw="5000"; let param="accountType=UNIFIED"; let sign=CryptoJS.HmacSHA256(ts+key+rw+param, sec).toString(); try{let r=await fetch('https://api.bybit.com/v5/account/wallet-balance?'+param,{headers:{"X-BAPI-API-KEY":key,"X-BAPI-SIGN":si
+async function fetchBalance(){let key=localStorage.getItem('bybit_key'); let sec=localStorage.getItem('bybit_secret'); if(!key||!sec) return; let ts=Date.now().toString(); let rw="5000"; let param="accountType=UNIFIED"; let sign=CryptoJS.HmacSHA256(ts+key+rw+param, sec).toString(); try{let r=await fetch('https://api.bybit.com/v5/account/wallet-balance?'+param,{headers:{"X-BAPI-API-KEY":key,"X-BAPI-SIGN":sign,"X-BAPI-TIMESTAMP":ts,"X-BAPI-RECV-WINDOW":rw}}); let j=await r.json(); if(j.result&&j.result.list){let list=j.result.list[0].coin; let usdt=list.find(c=>c.coin==='USDT'); document.getElementById('soldeTop').innerText=usdt?parseFloat(usdt.walletBalance).toFixed(2)+' $':'--'; let txt=list.filter(c=>parseFloat(c.walletBalance)>0).map(c=>c.coin+':'+parseFloat(c.walletBalance).toFixed(4)).join(' | '); document.getElementById('fond').innerText=txt||'0'; document.getElementById('fond2').innerText=(usdt?usdt.walletBalance+' USDT\n':'')+txt;}}catch(e){}}
+async function doTrade(side,id){let t=trades.find(x=>x.id===id); if(!t) return; let pr=prices[t.sym]; if(!pr){alert('Miandry prix LIVE... (2s)');fetchAll();return;} let usd=parseFloat(document.getElementById('usd-'+id).value)||t.usd; let key=localStorage.getItem('bybit_key'); let sec=localStorage.getItem('bybit_secret'); if(!key||!sec){openD('gauche');return;} let bodyObj; if(side==='Buy'){bodyObj={category:"spot",symbol:t.sym,side:side,orderType:"Market",qty:usd.toString(),marketUnit:"quoteCoin"};}else{let coin=t.sym.replace('USDT',''); let bal=null; try{let ts=Date.now().toString(); let rw="5000"; let param="accountType=UNIFIED"; let sign=CryptoJS.HmacSHA256(ts+key+rw+param, sec).toString(); let r=await fetch('https://api.bybit.com/v5/account/wallet-balance?'+param,{headers:{"X-BAPI-API-KEY":key,"X-BAPI-SIGN":sign,"X-BAPI-TIMESTAMP":ts,"X-BAPI-RECV-WINDOW":rw}}); let j=await r.json(); if(j.result) bal=j.result.list[0].coin.find(c=>c.coin===coin);}catch(e){} let real=bal?parseFloat(bal.walletBalance):0; if(real<=0){alert(coin+' tsy ampy');return;} let need=usd/pr; if(need>real) need=real; let qty=need.toFixed(6); bodyObj={category:"spot",symbol:t.sym,side:side,orderType:"Market",qty:qty};} let body=JSON.stringify(bodyObj); if(!confirm(side+' Trade'+id+' '+t.sym+' '+bodyObj.qty+' @ $'+pr.toFixed(6))) return; let ts=Date.now().toString(); let rw="5000"; let sign=CryptoJS.HmacSHA256(ts+key+rw+body, sec).toString(); try{let res=await fetch('https://api.bybit.com/v5/order/create',{method:"POST",headers:{"X-BAPI-API-KEY":key,"X-BAPI-SIGN":sign,"X-BAPI-TIMESTAMP":ts,"X-BAPI-RECV-WINDOW":rw,"Content-Type":"application/json"},body:body}); let j=await res.json(); if(j.retCode===0){if(side==='Buy'){t.entry=pr; t.entryT=new Date().toLocaleTimeString(); localStorage.setItem('entry_'+t.sym,pr.toString());}else{t.entry=0;} localStorage.setItem('trades_cfg',JSON.stringify(trades)); renderTrades(); let html='<div style="color:'+(side==='Buy'?'#0f0':'#f55')+';border-bottom:1px solid #222;padding:3px 0">'+new Date().toLocaleTimeString()+' - T'+id+' '+side+' '+t.sym+' '+bodyObj.qty+' @ $'+pr.toFixed(6)+'</div>'+document.getElementById('histo').innerHTML; document.getElementById('histo').innerHTML=html; localStorage.setItem('trade_histo',html); fetchBalance();}else alert('❌ '+j.retMsg);}catch(e){alert('CORS - Sokafy @ Bybit App Browser');}}
+function connect(){if(ws) try{ws.close()}catch(e){} ws=new WebSocket('wss://stream.bybit.com/v5/public/spot'); ws.onopen=()=>{ws.send(JSON.stringify({op:"subscribe",args:allCoins.slice(0,20).map(s=>'tickers.'+s)})); document.getElementById('connState').innerText='● LIVE 4T';}; ws.onmessage=e=>{try{let d=JSON.parse(e.data); if(d.data&&d.data.symbol&&d.data.lastPrice){let p=parseFloat(d.data.lastPrice); prices[d.data.symbol]=p; let el=document.querySelector('.coinChip[data-sym="'+d.data.symbol+'"] small'); if(el) el.innerText='$'+p.toFixed(d.data.symbol.includes('BTC')?2:6); updatePrice(d.data.symbol,p);}}catch{}}; ws.onclose=()=>setTimeout(connect,1200);}
+</script>
+</body></html>
